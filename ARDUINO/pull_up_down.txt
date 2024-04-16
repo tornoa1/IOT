@@ -1,0 +1,17 @@
+int pul1 = 7, pul2 = 8, pul3 = 9;
+int val1, val2, val3;
+//valor de la resistencia 220 omnioss
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(pul1,INPUT_PULLUP); //PULL UP
+  pinMode(pul2,INPUT); //PULL DOWN
+  pinMode(pul3,INPUT);
+}
+
+void loop() {
+  val1 = digitalRead(pul1);
+  val2 = digitalRead(pul2);
+  val3 = digitalRead(pul3);
+  Serial.print(val3);
+}
