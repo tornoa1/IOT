@@ -1,0 +1,23 @@
+int led = 23;
+
+int bot = 19;
+int val1;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  pinMode(led, OUTPUT);
+  pinMode(bot, INPUT);
+}
+
+void loop() {
+  delay(10);
+  val1 = digitalRead(bot);
+  Serial.println(val1);
+  if(val1 == HIGH){
+    digitalWrite(led, HIGH);
+  }else{
+    digitalWrite(led, LOW);
+  }
+  delay(70);
+}
