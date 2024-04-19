@@ -1,0 +1,14 @@
+int pot = 32;
+int valor;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(pot, INPUT);
+  analogReadResolution(10);
+}
+
+void loop() {
+  valor = analogRead(pot);
+  Serial.println(valor);
+  delay(10);
+}
