@@ -4,12 +4,9 @@ int valor;
 int led = 23;
 int freq = 5000;
 int ledChannel = 0;
-int resolution = 8; //salida de 0 a 255
+int resolution(8); //salida de 0 a 255
 
-int pwm;
-
-// Umbral de luz para apagar el LED
-const int UMBRAL_DE_LUZ = 700; // Ajusta este valor según la sensibilidad de tu sensor de luz
+int pwm; // Ajusta este valor según la sensibilidad de tu sensor de luz
 
 void setup() {
   Serial.begin(115200);
@@ -29,7 +26,7 @@ void loop() {
   Serial.println(pwm);
 
   // Apagar el LED si el valor del sensor de luz supera el umbral
-  if (valor > UMBRAL_DE_LUZ) {
+  if (valor > 510) {
     pwm = 0;
   }
 
