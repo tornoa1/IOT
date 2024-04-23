@@ -1,0 +1,64 @@
+int led = 23;
+int led2 = 32;
+int led3 = 33;
+
+int bot = 19;
+int val1;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  pinMode(led, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(bot, INPUT);
+}
+
+void loop() {
+  delay(10);
+  val1 = digitalRead(bot);
+  Serial.println(val1);
+  if(val1 == HIGH){
+    digitalWrite(led, HIGH);
+    delay(500);
+    digitalWrite(led, LOW);
+    delay(500);
+    digitalWrite(led, HIGH);
+    delay(500);
+    digitalWrite(led, LOW);
+    delay(500);
+    digitalWrite(led, HIGH);
+    delay(500);
+    digitalWrite(led, LOW);
+    delay(500);
+    digitalWrite(led2, HIGH);
+    delay(500);
+    digitalWrite(led2, LOW);
+    delay(500);
+    digitalWrite(led2, HIGH);
+    delay(500);
+    digitalWrite(led2, LOW);
+    delay(500);
+    digitalWrite(led2, HIGH);
+    delay(500);
+    digitalWrite(led2, LOW);
+    delay(500);
+    digitalWrite(led3, HIGH);
+    delay(500);
+    digitalWrite(led3, LOW);
+    delay(500);
+    digitalWrite(led3, HIGH);
+    delay(500);
+    digitalWrite(led3, LOW);
+    delay(500);
+    digitalWrite(led3, HIGH);
+    delay(500);
+    digitalWrite(led3, LOW);
+    delay(500);
+  }else{
+    digitalWrite(led, LOW);
+    digitalWrite(led2, LOW);
+    digitalWrite(led3, LOW);
+  }
+  delay(70);
+}
