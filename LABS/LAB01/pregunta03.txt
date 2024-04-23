@@ -1,5 +1,6 @@
 int led = 23;
 int led2 = 32;
+int led3 = 33;
 
 int bot = 19;
 
@@ -11,6 +12,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(led, OUTPUT);
   pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
   pinMode(bot, INPUT);
   pinMode(sw, INPUT);
 }
@@ -19,10 +21,12 @@ void loop() {
   delay(10);
   val1 = digitalRead(bot);
   val2 = digitalRead(sw);
+  digitalWrite(led3, HIGH);
   Serial.println(val2);
   if(val1 == HIGH && val2 ==HIGH){
     digitalWrite(led, HIGH);
     digitalWrite(led2, HIGH);
+    digitalWrite(led3, LOW);
   }else{
     digitalWrite(led, LOW);
     digitalWrite(led2, LOW);
