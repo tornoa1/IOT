@@ -1,0 +1,38 @@
+int pot = 32;
+int valor;
+
+int led = 23;
+int freq = 5000;
+int ledChannel = 0;
+int resolution = 8; //salida de 0 a 255
+
+int pwm;
+
+// Umbral de luz para apagar el LED
+const int UMBRAL_DE_LUZ = 700; // Ajusta este valor según la sensibilidad de tu sensor de luz
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(pot, INPUT);
+  ledcSetup(ledChannel, freq, resolution);
+  ledcAttachPin(led, ledChannel);
+  analogReadResolution(10);
+}
+
+void loop() {
+  valor = analogRead(pot);
+
+  pwm = map(valor, 0, 1023, 0, 255);
+
+  Serial.println(valor);
+  Serial.println(" ");
+  Serial.println(pwm);
+
+  // Apagar el LED si el valor del sensor de luz supera el umbral
+  if (valor > UMBRAL_DE_LUZ) {
+    pwm = 0;
+  }
+
+  ledcWrite(ledChannel, pwm);
+  delay(10);
+}
