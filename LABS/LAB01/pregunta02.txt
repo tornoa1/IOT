@@ -21,7 +21,7 @@ void loop() {
   val1 = digitalRead(bot);
   val2 = digitalRead(ldr);
   Serial.println(val1);
-  if(val1 == HIGH && val2 == HIGH){
+  if(val1 == HIGH || val2 == HIGH){
     digitalWrite(led, LOW);
     digitalWrite(led2, LOW);
     digitalWrite(led3, LOW);
