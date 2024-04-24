@@ -1,42 +1,27 @@
 int pot = 32;
-int valor;
-
-int led = 23;
-int led2 = 19;
-int led3 = 33;
-int led4 = 18;
-int led5 = 22;
+int ledPins[] = {23, 19, 33, 18, 22};
 
 void setup() {
   Serial.begin(115200);
-  pinMode(pot, INPUT);
-  pinMode(led, OUTPUT);
-  pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
-  pinMode(led4, OUTPUT);
-  pinMode(led5, OUTPUT);
-  
+  for (int i = 0; i < 5; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  } 
   analogReadResolution(10);
 }
 
 void loop() {
-  valor = analogRead(pot);
+  int potValue = analogRead(pot);
 
-  if (valor >= 1023){
-    digitalWrite(led, HIGH);
-    digitalWrite(led2, HIGH);
-    digitalWrite(led3, HIGH);
-    digitalWrite(led4, HIGH);
-    digitalWrite(led5, HIGH);
-  }else{
-    digitalWrite(led, LOW);
-    digitalWrite(led2, LOW);
-    digitalWrite(led3, LOW);
-    digitalWrite(led4, LOW);
-    digitalWrite(led5, LOW);
+  int ledCount = map(potValue, 0, 1023, 0, 5);
+
+  // Apagar todos los LEDs
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(ledPins[i], LOW);
+  }
+
+  for (int i = 0; i < ledCount; i++) {
+    digitalWrite(ledPins[i], HIGH);
   }
   
-  Serial.println(valor);
-
-  delay(10);
+  delay(50);
 }
