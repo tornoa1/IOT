@@ -20,9 +20,9 @@ void loop() {
   Serial.println(val1);
   if(val1==HIGH){
     for(int i = 0; i<3; i++){
-      digitalWrite(led1,HIGH);
+      digitalWrite(led,HIGH);
       delay(500);
-      digitalWrite(led1,LOW);
+      digitalWrite(led,LOW);
       delay(500);
     }
     for(int i = 0; i<3; i++){
