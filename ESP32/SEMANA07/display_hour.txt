@@ -1,0 +1,85 @@
+#include <RTClib.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C pantalla1(0x27,16,2);
+RTC_DS1307 reloj1;
+int pot=33;
+int volt;
+char diasSemana[7][12]={"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};
+char nombreMes[12][12]= {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
+void setup() {
+  // put your setup code here, to run once:
+  pantalla1.init();
+  pantalla1.backlight();
+  pantalla1.print("hola");
+  delay(1000);
+  pantalla1.clear();
+  pinMode(pot,INPUT);
+  reloj1.begin();
+  Serial.begin(115200);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  volt=analogRead(pot);
+  /*
+  pantalla1.setCursor(0,0);
+  pantalla1.print("Valor pot");
+  pantalla1.setCursor(0,1);
+  pantalla1.print(volt);
+  */
+  DateTime now= reloj1.now();
+  
+  Serial.println(nombreMes[now. month ()-1]);
+  pantalla1.setCursor(0,0);
+  pantalla1.print(diasSemana[now.dayOfTheWeek()]);
+  pantalla1.setCursor(0,1);
+  pantalla1.print(now.hour());
+  pantalla1.print(":");
+  pantalla1.print(now.minute());
+  pantalla1.print(":");
+  pantalla1.print(now.second());
+  
+  
+}#include <RTClib.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C pantalla1(0x27,16,2);
+RTC_DS1307 reloj1;
+int pot=33;
+int volt;
+char diasSemana[7][12]={"Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado"};
+char nombreMes[12][12]= {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"};
+void setup() {
+  // put your setup code here, to run once:
+  pantalla1.init();
+  pantalla1.backlight();
+  pantalla1.print("hola");
+  delay(1000);
+  pantalla1.clear();
+  pinMode(pot,INPUT);
+  reloj1.begin();
+  Serial.begin(115200);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  volt=analogRead(pot);
+  /*
+  pantalla1.setCursor(0,0);
+  pantalla1.print("Valor pot");
+  pantalla1.setCursor(0,1);
+  pantalla1.print(volt);
+  */
+  DateTime now= reloj1.now();
+  
+  Serial.println(nombreMes[now. month ()-1]);
+  pantalla1.setCursor(0,0);
+  pantalla1.print(diasSemana[now.dayOfTheWeek()]);
+  pantalla1.setCursor(0,1);
+  pantalla1.print(now.hour());
+  pantalla1.print(":");
+  pantalla1.print(now.minute());
+  pantalla1.print(":");
+  pantalla1.print(now.second());
+  
+  
+}
