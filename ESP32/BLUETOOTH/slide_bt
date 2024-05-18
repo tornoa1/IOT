@@ -1,0 +1,49 @@
+#include "BluetoothSerial.h"
+
+// Check if Bluetooth configs are enabled
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+
+// Bluetooth Serial object
+BluetoothSerial SerialBT;
+
+// GPIO where LED is connected to
+const int ledPin =  4;
+
+// Handle received and sent messages
+int pwm=0;
+
+// setting PWM properties
+const int freq = 5000;
+const int ledChannel = 0;
+const int resolution = 8;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  ledcSetup(ledChannel, freq, resolution);
+  ledcAttachPin(ledPin, ledChannel);
+  Serial.begin(115200);
+  // Bluetooth device name
+  SerialBT.begin("ESP32");
+  Serial.println("The device started, now you can pair it with bluetooth!");
+}
+
+void loop() {
+
+while (SerialBT.available()>0)
+    {
+        pwm = SerialBT.parseInt(); //Leemos el primer valor entero y 
+                                   //  lo almacenamos en la variable
+ 
+        //Cuando lea el carácter R quiere decir que ha finalizado 
+        //  el envío de los valores
+        if (SerialBT.read() == 'R')
+        {
+          //Enviamos los valores de los tres colores al LED RGB através de PWM
+          ledcWrite(ledChannel, pwm);
+          //analogWrite(ledPin,pwm);
+        }
+  } 
+  delay(20);
+}
