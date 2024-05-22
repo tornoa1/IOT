@@ -1,0 +1,15 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C pantalla1(0x27,16,2);
+
+void setup() {
+  pantalla1.init();
+  pantalla1.backlight();  
+}
+void loop(){
+  volt=analogRead(pot);
+  pantalla1.setCursor(0,0);
+  pantalla1.print("GABRIEL");
+  pantalla1.setCursor(0,1);
+  pantalla1.print("SATORNICIO");
+}
