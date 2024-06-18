@@ -1,0 +1,195 @@
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <UniversalTelegramBot.h>
+
+// Reemplazar con los datos de tu red wifi
+#define WIFI_SSID "IoT"
+#define WIFI_PASSWORD "laboratorioIOT"
+
+// Token de Telegram BOT se obtiene desde Botfather en Telegram
+#define BOT_TOKEN "7192412407:AAH7i9uSYpus3jfMlOSNv--_aICrc-OZ9sM"
+#define ID_Chat "1854855888"
+
+const unsigned long tiempo = 1000; // tiempo medio entre mensajes de escaneo
+WiFiClientSecure secured_client;
+UniversalTelegramBot bot(BOT_TOKEN, secured_client);
+unsigned long tiempoAnterior; // última vez que se realizó el análisis de mensajes
+
+const int led12 = 2;
+const int led14 = 4;
+int estadoLed12 = 0;
+int estadoLed14 = 0;
+
+int sensor=22; 
+int pot=34;
+String mensaje = "";
+int valor = 0;
+int volt;
+
+// Pines para PWM
+const int pwmPin = 5; // Pin donde está conectado el LED
+const int potPin = 34; // Pin del ADC donde está conectado el potenciometro
+
+// Configuraciones PWM
+const int pwmChannel = 0;
+const int pwmFreq = 5000;
+const int pwmResolution = 8;
+
+void setup()
+{
+  Serial.begin(115200);
+  pinMode(led12, OUTPUT); // inicializar pin 12 digital como salida.
+  pinMode(led14, OUTPUT); // inicializar pin 14 digital como salida.
+  digitalWrite(led12, HIGH); //
+  digitalWrite(led14, HIGH);
+  pinMode(sensor, INPUT);
+  pinMode(pot,INPUT);
+
+  ledcSetup(pwmChannel, pwmFreq, pwmResolution);
+  ledcAttachPin(pwmPin, pwmChannel);
+
+  // Intenta conectarse a la red wifi
+  Serial.print("Conectando a la red ");
+  Serial.print(WIFI_SSID);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  secured_client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Agregar certificado raíz para api.telegram.org
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("");
+  Serial.print("\nConectado a la red wifi. Dirección IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println("Sistema preparado");
+  bot.sendMessage(ID_Chat, "Sistema preparado!!!, escribe Ayuda para ver las opciones", "");
+}
+
+void loop()
+{
+  // Verifica si hay datos nuevos en telegram cada 1 segundo
+  if (millis() - tiempoAnterior > tiempo)
+  {
+    int numerosMensajes = bot.getUpdates(bot.last_message_received + 1);
+    while (numerosMensajes)
+    {
+      Serial.println("Comando recibido");
+      mensajesNuevos(numerosMensajes);
+      numerosMensajes = bot.getUpdates(bot.last_message_received + 1);
+    }
+    tiempoAnterior = millis();
+  }  
+  delay(1000);
+}
+
+void mensajesNuevos(int numerosMensajes)
+{
+  for (int i = 0; i < numerosMensajes; i++)
+  {
+    String chat_id = bot.messages[i].chat_id;
+    String text = bot.messages[i].text;
+    
+    ////////// Luz 1 en el pin 12 //////
+    if (text == "Luz1on")
+    {
+      digitalWrite(led12, HIGH); //
+      estadoLed12 = 1;
+      bot.sendMessage(chat_id, "Luz 1 encendida", "");
+    }
+    if (text == "Luz1off")
+    {
+      estadoLed12 = 0;
+      digitalWrite(led12, LOW); //
+      bot.sendMessage(chat_id, "Luz 1 apagada", "");
+    }
+    
+    ////////// Luz 2 en el pin 14 //////
+    if (text == "Luz2on")
+    {
+      digitalWrite(led14, HIGH);
+      estadoLed14 = 1;
+      bot.sendMessage(chat_id, "Luz 2 encendida", "");
+    }
+    if (text == "Luz2off")
+    {
+      estadoLed14 = 0;
+      digitalWrite(led14, LOW);
+      bot.sendMessage(chat_id, "Luz 2 apagada", "");
+    }
+    
+    ////////// Estado de las luces ///////
+    if (text == "Estado")
+    {
+      //// Estado luz 1 ////
+      if (estadoLed12)
+      {
+        bot.sendMessage(chat_id, "Luz 1 encendida", "");
+      }
+      else
+      {
+        bot.sendMessage(chat_id, "Luz 1 apagada", "");
+      }
+      //// Estado luz 2 ////
+      if (estadoLed14)
+      {
+        bot.sendMessage(chat_id, "Luz 2 encendida", "");
+      }
+      else
+      {
+        bot.sendMessage(chat_id, "Luz 2 apagada", "");
+      }
+    }
+
+    ////////// Ajustar PWM ///////
+    if (text.startsWith("PWM "))
+    {
+      int valorPWM = text.substring(4).toInt();
+      if (valorPWM >= 0 && valorPWM <= 255)
+      {
+        ledcWrite(pwmChannel, valorPWM);
+        bot.sendMessage(chat_id, "Intensidad del LED ajustada a: " + String(valorPWM), "");
+      }
+      else
+      {
+        bot.sendMessage(chat_id, "Por favor, ingresa un valor entre 0 y 255.", "");
+      }
+    }
+
+    if (text == "Potenciometro")
+    {
+      volt=analogRead(pot);
+      if(volt>2500){
+        mensaje="Se detecto un valor elevado del sensor, mide"+String(volt);
+        bot.sendMessage(ID_Chat, mensaje, "");
+      }
+    }
+    if (text == "Switch")
+    {
+      
+      valor=digitalRead(sensor);
+      Serial.println(valor);
+      if(valor==1){
+        mensaje="Se detecto movimiento en el pin digital: "+String(sensor);
+        bot.sendMessage(ID_Chat, mensaje, "");
+      }
+    }
+
+    if (text == "Ayuda")
+    {
+      String ayuda = "Bienvenido al sistema de control luces con Esp32.\n";
+      ayuda += "Estas son tus opciones:\n\n";
+      ayuda += "Luz1on: para encender la Luz 1\n";
+      ayuda += "Luz1off: para apagar la luz 1\n";
+      ayuda += "Luz2on: para encender la Luz 2\n";
+      ayuda += "Luz2off: para apagar la luz 2\n";
+      ayuda += "Estado: devuelve el estado actual de las luces\n";
+      ayuda += "PWM [valor]: ajusta la intensidad del LED (0-255)\n";
+      ayuda += "Potenciometro: detecta cambios de valor\n";
+      ayuda += "Switch: detecta movimientos\n";
+      ayuda += "Ayuda: Imprime este menú\n";
+      ayuda += "Recuerda que el sistema distingue entre mayúsculas y minúsculas\n";
+      bot.sendMessage(chat_id, ayuda, "");
+    }
+  }
+}
