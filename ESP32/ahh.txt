@@ -81,6 +81,19 @@ void loop()
     tiempoAnterior = millis();
   }  
   delay(1000);
+
+        volt=analogRead(pot);
+      if(volt>2500){
+        mensaje="Se detecto un valor elevado del sensor, mide"+String(volt);
+        bot.sendMessage(ID_Chat, mensaje, "");
+      }
+
+    valor=digitalRead(sensor);
+      Serial.println(valor);
+      if(valor==1){
+        mensaje="Se detecto movimiento en el pin digital: "+String(sensor);
+        bot.sendMessage(ID_Chat, mensaje, "");
+      }
 }
 
 void mensajesNuevos(int numerosMensajes)
@@ -153,25 +166,6 @@ void mensajesNuevos(int numerosMensajes)
       else
       {
         bot.sendMessage(chat_id, "Por favor, ingresa un valor entre 0 y 255.", "");
-      }
-    }
-
-    if (text == "Potenciometro")
-    {
-      volt=analogRead(pot);
-      if(volt>2500){
-        mensaje="Se detecto un valor elevado del sensor, mide"+String(volt);
-        bot.sendMessage(ID_Chat, mensaje, "");
-      }
-    }
-    if (text == "Switch")
-    {
-      
-      valor=digitalRead(sensor);
-      Serial.println(valor);
-      if(valor==1){
-        mensaje="Se detecto movimiento en el pin digital: "+String(sensor);
-        bot.sendMessage(ID_Chat, mensaje, "");
       }
     }
 
