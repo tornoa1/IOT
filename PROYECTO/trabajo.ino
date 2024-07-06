@@ -188,13 +188,13 @@ void loop() {
     enviarAlertaTelegram(distance);
     activarBuzzer(distance);
     if ((millis() - lastTime) > timerDelay) {
-      registrarEnThingSpeak(distance);
+      registrarThingSpeak(distance);
       lastTime = millis();
     }
   }
 
   verificarComandosTelegram();
-  delay(2000);
+  delay(1000);
 }
 
 void enviarDatosAWS(float distancia) {
@@ -231,7 +231,7 @@ void activarBuzzer(float distancia) {
   }
 }
 
-void registrarEnThingSpeak(float distancia) {
+void registrarThingSpeak(float distancia) {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
     http.begin(serverName);
