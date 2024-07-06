@@ -212,22 +212,23 @@ void enviarAlertaTelegram(float distancia) {
 }
 
 void activarBuzzer(float distancia) {
-  // Tonos diferentes según la distancia
   if (distancia < 50) {
     tone(buzzerPin, 1000); // Frecuencia en Hz
-    delay(500);
+    delay(50);
     noTone(buzzerPin);
-    delay(500);
+    delay(50);
   } else if (distancia < 75) {
-    tone(buzzerPin, 750); // Frecuencia en Hz
+    tone(buzzerPin, 750);
     delay(500);
     noTone(buzzerPin);
     delay(500);
-  } else {
+  } else if (distancia < 100) {
     tone(buzzerPin, 500); // Frecuencia en Hz
     delay(500);
     noTone(buzzerPin);
     delay(500);
+  } else {
+    noTone(buzzerPin); // Apagar el buzzer si la distancia es mayor o igual a 100 cm
   }
 }
 
