@@ -200,7 +200,7 @@ void loop() {
 void enviarDatosAWS(float distancia) {
   String macIdStr = mac_Id;
   String valor = String(distancia);
-  snprintf(msg, 256, "{\"mac_Id\" : \"%s\", \"Distancia\" : %s}", macIdStr.c_str(), valor.c_str());
+  snprintf(msg, 256, "{\"Distancia\" : %s}", macIdStr.c_str(), valor.c_str());
   Serial.print("Publicando mensaje: ");
   Serial.println(msg);
   clientAWS.publish("proyecto", msg);
